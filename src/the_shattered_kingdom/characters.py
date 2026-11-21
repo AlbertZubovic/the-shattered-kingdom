@@ -64,14 +64,20 @@ class Character:
         if damage_amount < 1:
             raise ValueError("Damage amount must be greater than 0.")
 
-        if self.__hp > 0:
-            self.__hp = max(0, self.__hp - damage_amount)
+        if not self.is_alive():
+            return False
+
+        damage_taken = min(self.__hp, max(1, damage_amount - self.__defense))
+
+        print(f"{self.__name} takes {damage_taken} damage.")
+
+        self.__hp -= damage_taken
 
         if self.__hp == 0:
             print(f"{self.__name} has died.")
             return False
 
-        print(f"{self.__name} takes {damage_amount} damage.")
+        print(f"{self.__name} has {self.__hp} HP remaining.")
         return True
 
 
@@ -84,12 +90,23 @@ class Character:
         if self.__hp == 0:
             print(f"{self.__name} has died and cannot be healed.")
         else:
-            self.__hp = min(self.__hp + heal_amount, self.__max_hp)
+            total_heal = min(heal_amount, self.__max_hp - self.__hp)
+            self.__hp += total_heal
 
-            print(f"{self.__name} heals {heal_amount} HP.")
+            print(f"{self.__name} heals {total_heal} HP.")
 
 
     def is_alive(self) -> bool:
         """Return whether the character has remaining HP."""
 
         return self.__hp > 0
+
+    def attack_target(self, target: Character) -> None:
+        """Deals damage to a target Character."""
+        if not isinstance(target, Character):
+            raise TypeError(f"The target is not a Character.")
+
+        if not self.is_alive():
+            raise ValueError("Dead characters cannot attack.")
+
+        target.take_damage(max(1, self.__attack))

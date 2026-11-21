@@ -11,9 +11,9 @@ def init_characters() -> Character:
 @pytest.mark.parametrize(
     "damage_amount, expected_hp, expected_alive",
     [
-        pytest.param(20, 80, True, id="damage-20-hp"),
-        pytest.param(90, 10, True, id="damage-90-hp"),
-        pytest.param(100, 0, False, id="damage-to-max-hp"),
+        pytest.param(20, 85, True, id="damage-20-hp"),
+        pytest.param(90, 15, True, id="damage-90-hp"),
+        pytest.param(105, 0, False, id="damage-to-max-hp"),
         pytest.param(200, 0, False, id="damage-over-max-hp"),
     ],
 )
@@ -63,7 +63,7 @@ def test_heal(
     init_characters: Character,
 ) -> None:
     arin = init_characters
-    arin.take_damage(50)
+    arin.take_damage(55)
 
     arin.heal(heal_amount)
 
@@ -94,7 +94,7 @@ def test_heal_invalid_amount(
         pytest.param(20, True, id="alive-after-20-damage"),
         pytest.param(50, True, id="alive-after-50-damage"),
         pytest.param(200, False, id="dead-after-200-damage"),
-        pytest.param(100, False, id="dead-after-100-damage"),
+        pytest.param(105, False, id="dead-after-105-damage"),
     ],
 )
 def test_is_alive(
@@ -206,7 +206,7 @@ def test_character_initial_stats(init_characters: Character) -> None:
 
 def test_heal_dead_character(init_characters: Character) -> None:
     arin = init_characters
-    arin.take_damage(100)
+    arin.take_damage(105)
 
     arin.heal(50)
 
@@ -220,7 +220,7 @@ def test_independent_character_state() -> None:
 
     arin.take_damage(40)
 
-    assert arin.hp == 60
+    assert arin.hp == 65
     assert quake.hp == 150
 
 
@@ -231,4 +231,123 @@ def test_character_string_representation(
 
     assert str(arin) == (
         "Hero: Arin | HP: 100/100 | ATK: 10 | DEF: 5"
+    )
+
+
+@pytest.mark.parametrize(
+    "attacker_attack, defender_defense, expected_damage",
+    [
+        pytest.param(
+            30, 5, 25,
+            id="attack-exceeds-defense",
+        ),
+        pytest.param(
+            10, 10, 1,
+            id="attack-equals-defense-minimum-damage",
+        ),
+        pytest.param(
+            5, 20, 1,
+            id="defense-exceeds-attack-minimum-damage",
+        ),
+        pytest.param(
+            0, 0, 1,
+            id="zero-attack-zero-defense",
+        ),
+        pytest.param(
+            0, 20, 1,
+            id="zero-attack-high-defense",
+        ),
+        pytest.param(
+            100, 0, 100,
+            id="attack-without-defense",
+        ),
+    ],
+)
+def test_attack_target_damage(
+    attacker_attack: int,
+    defender_defense: int,
+    expected_damage: int,
+) -> None:
+    attacker = Character("Arin", 100, attacker_attack, 5)
+    defender = Character("Quake", 150, 10, defender_defense)
+
+    attacker.attack_target(defender)
+
+    assert defender.hp == 150 - expected_damage
+    assert attacker.hp == 100
+
+
+@pytest.mark.parametrize(
+    "target_hp, attack, defense",
+    [
+        pytest.param(
+            20, 25, 5,
+            id="exact-lethal-attack",
+        ),
+        pytest.param(
+            20, 100, 5,
+            id="overkill-attack",
+        ),
+        pytest.param(
+            1, 0, 100,
+            id="minimum-damage-lethal-attack",
+        ),
+    ],
+)
+def test_attack_target_kills_defender(
+    target_hp: int,
+    attack: int,
+    defense: int,
+) -> None:
+    attacker = Character("Arin", 100, attack, 5)
+    defender = Character("Quake", target_hp, 10, defense)
+
+    attacker.attack_target(defender)
+
+    assert defender.hp == 0
+    assert defender.is_alive() is False
+
+
+def test_dead_character_cannot_attack() -> None:
+    arin = Character("Arin", 100, 20, 5)
+    quake = Character("Quake", 100, 10, 5)
+
+    arin.take_damage(105)
+
+    with pytest.raises(ValueError):
+        arin.attack_target(quake)
+
+    assert quake.hp == 100
+
+
+def test_attack_target_does_not_damage_attacker() -> None:
+    arin = Character("Arin", 100, 20, 5)
+    quake = Character("Quake", 100, 10, 5)
+
+    arin.attack_target(quake)
+
+    assert arin.hp == 100
+    assert quake.hp == 85
+
+
+def test_attack_target_does_not_modify_stats() -> None:
+    arin = Character("Arin", 100, 20, 5)
+    quake = Character("Quake", 100, 10, 10)
+
+    arin.attack_target(quake)
+
+    assert arin.attack == 20
+    assert arin.defense == 5
+    assert quake.attack == 10
+    assert quake.defense == 10
+
+
+def test_character_string_representation_after_damage(
+    init_characters: Character,
+) -> None:
+    arin = init_characters
+    arin.take_damage(40)
+
+    assert str(arin) == (
+        "Hero: Arin | HP: 65/100 | ATK: 10 | DEF: 5"
     )
