@@ -1,6 +1,6 @@
 import pytest
 
-from src.the_shattered_kingdom.characters import Character
+from the_shattered_kingdom.characters.character import Character
 
 
 @pytest.fixture

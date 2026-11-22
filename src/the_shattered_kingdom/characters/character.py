@@ -33,6 +33,13 @@ class Character:
         self.__defense = defense
 
 
+    def introduce(self) -> None:
+        """Display the Characters's battlefield introduction."""
+
+        print(f"{self.__name} the Adventurer steps forward, armed with nothing but courage and determination. Their")
+        print("path remains unwritten, but destiny awaits in the Shattered Kingdom.", end="\n\n")
+
+
     @property
     def name(self) -> str:
         return self.__name

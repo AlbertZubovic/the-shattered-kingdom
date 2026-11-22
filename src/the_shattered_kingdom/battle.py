@@ -1,4 +1,4 @@
-from .characters import Character
+from the_shattered_kingdom.characters.character import Character
 
 class Battle:
     """Represent a class representing the combat and statistics of a battle between two characters."""
