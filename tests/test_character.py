@@ -3,32 +3,46 @@ import pytest
 from the_shattered_kingdom.characters.character import Character
 
 
+class DummyCharacter(Character):
+    """Concrete character used to test inherited Character behavior."""
+
+    def introduce(self) -> None:
+        """Provide the required implementation for testing."""
+        pass
+
+
 @pytest.fixture
 def init_characters() -> Character:
-    return Character("Arin", 100, 10, 5)
+    return DummyCharacter("Arin", 100, 10, 5)
+
+
+def test_character_is_abstract() -> None:
+    with pytest.raises(TypeError, match="abstract class"):
+        Character("Arin", 100, 10, 5)
 
 
 @pytest.mark.parametrize(
-    "damage_amount, expected_hp, expected_alive",
+    "damage_amount, expected_hp, expected_damage",
     [
-        pytest.param(20, 85, True, id="damage-20-hp"),
-        pytest.param(90, 15, True, id="damage-90-hp"),
-        pytest.param(105, 0, False, id="damage-to-max-hp"),
-        pytest.param(200, 0, False, id="damage-over-max-hp"),
+        pytest.param(20, 85, 15, id="damage-20-hp"),
+        pytest.param(90, 15, 85, id="damage-90-hp"),
+        pytest.param(105, 0, 100, id="damage-to-max-hp"),
+        pytest.param(200, 0, 100, id="damage-over-max-hp"),
     ],
 )
 def test_take_damage(
     damage_amount: int,
     expected_hp: int,
-    expected_alive: bool,
+    expected_damage: int,
     init_characters: Character,
 ) -> None:
     arin = init_characters
 
-    survived = arin.take_damage(damage_amount)
+    damage_taken = arin.take_damage(damage_amount)
 
     assert arin.hp == expected_hp
-    assert survived is expected_alive
+    assert damage_taken == expected_damage
+    assert arin.is_alive() is (expected_hp > 0)
 
 
 @pytest.mark.parametrize(
@@ -173,7 +187,7 @@ def test_character_invalid_initialization(
     expected_exception: type[Exception],
 ) -> None:
     with pytest.raises(expected_exception):
-        Character(name, max_hp, attack, defense)  # type: ignore[arg-type]
+        DummyCharacter(name, max_hp, attack, defense)  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize(
@@ -188,7 +202,7 @@ def test_character_name(
     name: str,
     expected_name: str,
 ) -> None:
-    character = Character(name, 100, 10, 5)
+    character = DummyCharacter(name, 100, 10, 5)
 
     assert character.name == expected_name
 
@@ -215,8 +229,8 @@ def test_heal_dead_character(init_characters: Character) -> None:
 
 
 def test_independent_character_state() -> None:
-    arin = Character("Arin", 100, 10, 5)
-    quake = Character("Quake", 150, 25, 15)
+    arin = DummyCharacter("Arin", 100, 10, 5)
+    quake = DummyCharacter("Quake", 150, 25, 15)
 
     arin.take_damage(40)
 
@@ -268,8 +282,8 @@ def test_attack_target_damage(
     defender_defense: int,
     expected_damage: int,
 ) -> None:
-    attacker = Character("Arin", 100, attacker_attack, 5)
-    defender = Character("Quake", 150, 10, defender_defense)
+    attacker = DummyCharacter("Arin", 100, attacker_attack, 5)
+    defender = DummyCharacter("Quake", 150, 10, defender_defense)
 
     attacker.attack_target(defender)
 
@@ -299,8 +313,8 @@ def test_attack_target_kills_defender(
     attack: int,
     defense: int,
 ) -> None:
-    attacker = Character("Arin", 100, attack, 5)
-    defender = Character("Quake", target_hp, 10, defense)
+    attacker = DummyCharacter("Arin", 100, attack, 5)
+    defender = DummyCharacter("Quake", target_hp, 10, defense)
 
     attacker.attack_target(defender)
 
@@ -309,8 +323,8 @@ def test_attack_target_kills_defender(
 
 
 def test_dead_character_cannot_attack() -> None:
-    arin = Character("Arin", 100, 20, 5)
-    quake = Character("Quake", 100, 10, 5)
+    arin = DummyCharacter("Arin", 100, 20, 5)
+    quake = DummyCharacter("Quake", 100, 10, 5)
 
     arin.take_damage(105)
 
@@ -321,8 +335,8 @@ def test_dead_character_cannot_attack() -> None:
 
 
 def test_attack_target_does_not_damage_attacker() -> None:
-    arin = Character("Arin", 100, 20, 5)
-    quake = Character("Quake", 100, 10, 5)
+    arin = DummyCharacter("Arin", 100, 20, 5)
+    quake = DummyCharacter("Quake", 100, 10, 5)
 
     arin.attack_target(quake)
 
@@ -331,8 +345,8 @@ def test_attack_target_does_not_damage_attacker() -> None:
 
 
 def test_attack_target_does_not_modify_stats() -> None:
-    arin = Character("Arin", 100, 20, 5)
-    quake = Character("Quake", 100, 10, 10)
+    arin = DummyCharacter("Arin", 100, 20, 5)
+    quake = DummyCharacter("Quake", 100, 10, 10)
 
     arin.attack_target(quake)
 

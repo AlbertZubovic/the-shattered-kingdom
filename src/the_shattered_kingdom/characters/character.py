@@ -1,4 +1,6 @@
-class Character:
+from abc import ABC, abstractmethod
+
+class Character(ABC):
     """Represent a class with combat statistics and health."""
 
     def __init__(self, name: str, max_hp: int, attack: int, defense: int) -> None:
@@ -33,11 +35,11 @@ class Character:
         self.__defense = defense
 
 
+    @abstractmethod
     def introduce(self) -> None:
         """Display the Characters's battlefield introduction."""
 
-        print(f"{self.__name} the Adventurer steps forward, armed with nothing but courage and determination. Their")
-        print("path remains unwritten, but destiny awaits in the Shattered Kingdom.", end="\n\n")
+        pass
 
 
     @property
@@ -65,14 +67,14 @@ class Character:
         return f"Hero: {self.__name} | HP: {self.__hp}/{self.__max_hp} | ATK: {self.__attack} | DEF: {self.__defense}"
 
 
-    def take_damage(self, damage_amount: int) -> bool:
-        """Apply damage and return whether the character is still alive."""
+    def take_damage(self, damage_amount: int) -> int:
+        """Apply damage after defense and return the actual HP lost."""
 
         if damage_amount < 1:
             raise ValueError("Damage amount must be greater than 0.")
 
         if not self.is_alive():
-            return False
+            return 0
 
         damage_taken = min(self.__hp, max(1, damage_amount - self.__defense))
 
@@ -82,13 +84,13 @@ class Character:
 
         if self.__hp == 0:
             print(f"{self.__name} has died.")
-            return False
 
         print(f"{self.__name} has {self.__hp} HP remaining.")
-        return True
+
+        return damage_taken
 
 
-    def heal(self, heal_amount: int) -> None:
+    def heal(self, heal_amount: int) -> int:
         """Restore HP up to the maximum, unless the character is dead."""
 
         if heal_amount < 1:
@@ -96,11 +98,13 @@ class Character:
 
         if self.__hp == 0:
             print(f"{self.__name} has died and cannot be healed.")
+            return 0
         else:
             total_heal = min(heal_amount, self.__max_hp - self.__hp)
             self.__hp += total_heal
 
             print(f"{self.__name} heals {total_heal} HP.")
+            return total_heal
 
 
     def is_alive(self) -> bool:

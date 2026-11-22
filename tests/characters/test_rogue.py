@@ -1,3 +1,4 @@
+
 from typing import cast
 from unittest.mock import patch
 
@@ -5,6 +6,14 @@ import pytest
 
 from the_shattered_kingdom.characters.character import Character
 from the_shattered_kingdom.characters.rogue import Rogue
+
+
+class DummyCharacter(Character):
+    """Concrete character used as a target in tests."""
+
+    def introduce(self) -> None:
+        """Implement the required abstract method."""
+        pass
 
 
 @pytest.fixture
@@ -45,7 +54,7 @@ def test_rogue_special_attack_damage(
     target_defense: int,
     expected_total_damage: int,
 ) -> None:
-    target = Character("Enemy", 100, 10, target_defense)
+    target = DummyCharacter("Enemy", 100, 10, target_defense)
 
     rogue.special_attack(target)
 
@@ -53,9 +62,13 @@ def test_rogue_special_attack_damage(
 
 
 def test_rogue_special_attack_hits_twice(rogue: Rogue) -> None:
-    target = Character("Enemy", 100, 10, 10)
+    target = DummyCharacter("Enemy", 100, 10, 10)
 
-    with patch.object(target, "take_damage", wraps=target.take_damage) as damage_spy:
+    with patch.object(
+        target,
+        "take_damage",
+        wraps=target.take_damage,
+    ) as damage_spy:
         rogue.special_attack(target)
 
     assert damage_spy.call_count == 2
@@ -81,7 +94,7 @@ def test_rogue_special_attack_rejects_invalid_target(
 
 
 def test_dead_rogue_cannot_use_special_attack(rogue: Rogue) -> None:
-    target = Character("Enemy", 100, 10, 0)
+    target = DummyCharacter("Enemy", 100, 10, 0)
 
     rogue.take_damage(200)
     assert not rogue.is_alive()

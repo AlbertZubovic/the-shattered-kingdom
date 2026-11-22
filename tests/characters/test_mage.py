@@ -1,9 +1,18 @@
+
 from typing import cast
 
 import pytest
 
 from the_shattered_kingdom.characters.character import Character
 from the_shattered_kingdom.characters.mage import Mage
+
+
+class DummyCharacter(Character):
+    """Concrete character used as a target in tests."""
+
+    def introduce(self) -> None:
+        """Implement the required abstract method."""
+        pass
 
 
 @pytest.fixture
@@ -43,7 +52,7 @@ def test_mage_fireball_ignores_defense(
     mage: Mage,
     target_defense: int,
 ) -> None:
-    target = Character("Enemy", 100, 10, target_defense)
+    target = DummyCharacter("Enemy", 100, 10, target_defense)
 
     mage.special_attack(target)
 
@@ -67,7 +76,7 @@ def test_mage_special_attack_rejects_invalid_target(
 
 
 def test_dead_mage_cannot_use_special_attack(mage: Mage) -> None:
-    target = Character("Enemy", 100, 10, 0)
+    target = DummyCharacter("Enemy", 100, 10, 0)
 
     mage.take_damage(200)
     assert not mage.is_alive()

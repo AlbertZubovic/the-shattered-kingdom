@@ -9,9 +9,11 @@ class Warrior(Character):
 
     def introduce(self) -> None:
         """Display the Warrior's battlefield introduction."""
-
-        print(f"Steel clashes as {self.name} the Warrior steps onto the battlefield")
-        print("With an unbreakable shield, they stand ready to face any foe.", end="\n\n")
+        print(
+            f"Steel clashes as {self.name} the Warrior steps onto the battlefield. "
+            "With an unbreakable shield, they stand ready to face any foe.",
+            end="\n\n",
+        )
 
 
     def special_attack(self, target: Character) -> None:
@@ -23,5 +25,8 @@ class Warrior(Character):
         if not self.is_alive():
             raise ValueError("Dead characters cannot attack.")
 
-        print(f"{self.name} swings a massive sword.")
+        print(
+            f"{self.name} swings a massive sword with devastating force, "
+            f"unleashing a powerful strike against {target.name}!"
+        )
         target.take_damage(int(self.attack * 1.5))

@@ -1,16 +1,23 @@
-
 from unittest.mock import patch
 
 import pytest
 
-from src.the_shattered_kingdom.battle import Battle
+from the_shattered_kingdom.battle import Battle
 from the_shattered_kingdom.characters.character import Character
+
+
+class DummyCharacter(Character):
+    """Concrete character used to test battle behavior."""
+
+    def introduce(self) -> None:
+        """Implement the abstract introduction method."""
+        pass
 
 
 @pytest.fixture
 def initiate_battle() -> tuple[Battle, Character, Character]:
-    arin = Character("Arin", 100, 50, 10)
-    quake = Character("Quake", 100, 20, 15)
+    arin = DummyCharacter("Arin", 100, 50, 10)
+    quake = DummyCharacter("Quake", 100, 20, 15)
 
     return Battle(arin, quake), arin, quake
 
@@ -30,8 +37,8 @@ def test_battle_invalid_combatant_types(
     invalid_position: str,
     invalid_value: object,
 ) -> None:
-    arin = Character("Arin", 100, 10, 5)
-    quake = Character("Quake", 100, 10, 5)
+    arin = DummyCharacter("Arin", 100, 10, 5)
+    quake = DummyCharacter("Quake", 100, 10, 5)
 
     if invalid_position == "first":
         with pytest.raises(TypeError):
@@ -52,8 +59,8 @@ def test_battle_invalid_combatant_types(
 def test_battle_rejects_dead_combatants(
     dead_combatant: str,
 ) -> None:
-    arin = Character("Arin", 100, 10, 5)
-    quake = Character("Quake", 100, 10, 5)
+    arin = DummyCharacter("Arin", 100, 10, 5)
+    quake = DummyCharacter("Quake", 100, 10, 5)
 
     if dead_combatant in ("first", "both"):
         arin.take_damage(105)
@@ -72,7 +79,7 @@ def test_battle_rejects_dead_combatants(
 
 
 def test_battle_rejects_same_character() -> None:
-    arin = Character("Arin", 100, 10, 5)
+    arin = DummyCharacter("Arin", 100, 10, 5)
 
     with pytest.raises(ValueError):
         Battle(arin, arin)
@@ -125,8 +132,8 @@ def test_battle_returns_expected_winner(
     b_defense: int,
     expected_winner: str,
 ) -> None:
-    arin = Character("Arin", a_hp, a_attack, a_defense)
-    quake = Character("Quake", b_hp, b_attack, b_defense)
+    arin = DummyCharacter("Arin", a_hp, a_attack, a_defense)
+    quake = DummyCharacter("Quake", b_hp, b_attack, b_defense)
 
     battle = Battle(arin, quake)
 
@@ -154,8 +161,8 @@ def test_battle_ends_on_first_lethal_attack(
     attack: int,
     defense: int,
 ) -> None:
-    arin = Character("Arin", 100, attack, 0)
-    quake = Character("Quake", 20, 100, defense)
+    arin = DummyCharacter("Arin", 100, attack, 0)
+    quake = DummyCharacter("Quake", 20, 100, defense)
 
     battle = Battle(arin, quake)
 
@@ -245,8 +252,8 @@ def test_turn_order(
 
 
 def test_battle_stops_after_combatant_dies() -> None:
-    arin = Character("Arin", 100, 100, 0)
-    quake = Character("Quake", 50, 10, 0)
+    arin = DummyCharacter("Arin", 100, 100, 0)
+    quake = DummyCharacter("Quake", 50, 10, 0)
 
     battle = Battle(arin, quake)
 

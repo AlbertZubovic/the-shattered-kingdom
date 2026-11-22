@@ -9,9 +9,11 @@ class Mage(Character):
 
     def introduce(self) -> None:
         """Display the Mage's battlefield introduction."""
-
-        print(f"Arcane energy crackles through the air as {self.name} the Mage emerges from the shadows")
-        print("Ancient magic stirs at their fingertips, ready to unleash untold power.", end="\n\n")
+        print(
+            f"Arcane energy crackles through the air as {self.name} the Mage emerges from the shadows. "
+            "Ancient magic stirs at their fingertips, ready to unleash untold power.",
+            end="\n\n",
+        )
 
 
     def special_attack(self, target: Character) -> None:
@@ -23,5 +25,8 @@ class Mage(Character):
         if not self.is_alive():
             raise ValueError("Dead characters cannot attack.")
 
-        print(f"{self.name} launches a magical fireball.")
+        print(
+            f"{self.name} channels ancient arcane energy into a blazing fireball, "
+            f"unleashing a devastating burst of flames upon {target.name}!"
+        )
         target.take_damage(40 + target.defense)

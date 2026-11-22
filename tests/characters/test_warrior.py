@@ -6,6 +6,14 @@ from the_shattered_kingdom.characters.character import Character
 from the_shattered_kingdom.characters.warrior import Warrior
 
 
+class DummyCharacter(Character):
+    """Concrete character used as a target in tests."""
+
+    def introduce(self) -> None:
+        """Implement the required abstract method."""
+        pass
+
+
 @pytest.fixture
 def warrior() -> Warrior:
     return Warrior("Arin")
@@ -44,7 +52,7 @@ def test_warrior_special_attack_damage(
     target_defense: int,
     expected_damage: int,
 ) -> None:
-    target = Character("Enemy", 100, 10, target_defense)
+    target = DummyCharacter("Enemy", 100, 10, target_defense)
 
     warrior.special_attack(target)
 
@@ -68,7 +76,7 @@ def test_warrior_special_attack_rejects_invalid_target(
 
 
 def test_dead_warrior_cannot_use_special_attack(warrior: Warrior) -> None:
-    target = Character("Enemy", 100, 10, 0)
+    target = DummyCharacter("Enemy", 100, 10, 0)
 
     warrior.take_damage(200)
     assert not warrior.is_alive()
