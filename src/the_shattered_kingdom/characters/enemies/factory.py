@@ -1,8 +1,8 @@
-from the_shattered_kingdom.enemies.enemy import Enemy
+from the_shattered_kingdom.characters.enemies.enemy import Enemy
 
-from the_shattered_kingdom.enemies.dragon import Dragon
-from the_shattered_kingdom.enemies.goblin import Goblin
-from the_shattered_kingdom.enemies.skeleton import Skeleton
+from the_shattered_kingdom.characters.enemies.dragon import Dragon
+from the_shattered_kingdom.characters.enemies.goblin import Goblin
+from the_shattered_kingdom.characters.enemies.skeleton import Skeleton
 
 ENEMY_CLASSES = {
     "dragon": Dragon,

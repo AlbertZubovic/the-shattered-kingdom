@@ -1,7 +1,7 @@
 from the_shattered_kingdom.characters.character import Character
-from the_shattered_kingdom.characters.mage import Mage
-from the_shattered_kingdom.characters.rogue import Rogue
-from the_shattered_kingdom.characters.warrior import Warrior
+from the_shattered_kingdom.characters.players.mage import Mage
+from the_shattered_kingdom.characters.players.rogue import Rogue
+from the_shattered_kingdom.characters.players.warrior import Warrior
 
 
 def start() -> None:

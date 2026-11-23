@@ -4,7 +4,7 @@ from typing import cast
 import pytest
 
 from the_shattered_kingdom.characters.character import Character
-from the_shattered_kingdom.characters.mage import Mage
+from the_shattered_kingdom.characters.players.mage import Mage
 
 
 class DummyCharacter(Character):

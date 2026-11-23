@@ -1,13 +1,13 @@
 import pytest
 
-from the_shattered_kingdom.enemies.dragon import Dragon
-from the_shattered_kingdom.enemies.enemy import Enemy
-from the_shattered_kingdom.enemies.factory import (
+from the_shattered_kingdom.characters.enemies.dragon import Dragon
+from the_shattered_kingdom.characters.enemies.enemy import Enemy
+from the_shattered_kingdom.characters.enemies.factory import (
     ENEMY_CLASSES,
     create_enemy,
 )
-from the_shattered_kingdom.enemies.goblin import Goblin
-from the_shattered_kingdom.enemies.skeleton import Skeleton
+from the_shattered_kingdom.characters.enemies.goblin import Goblin
+from the_shattered_kingdom.characters.enemies.skeleton import Skeleton
 
 
 @pytest.mark.parametrize(

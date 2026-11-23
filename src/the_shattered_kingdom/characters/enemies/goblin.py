@@ -1,5 +1,5 @@
 from the_shattered_kingdom.characters.character import Character
-from the_shattered_kingdom.enemies.enemy import Enemy
+from the_shattered_kingdom.characters.enemies.enemy import Enemy
 
 class Goblin(Enemy):
     """Represent a goblin that uses a dirty trick every third turn."""

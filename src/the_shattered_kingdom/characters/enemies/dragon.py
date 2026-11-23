@@ -1,5 +1,5 @@
 from the_shattered_kingdom.characters.character import Character
-from the_shattered_kingdom.enemies.enemy import Enemy
+from the_shattered_kingdom.characters.enemies.enemy import Enemy
 
 class Dragon(Enemy):
     """Represent a dragon that unleashes an inferno every fourth turn."""

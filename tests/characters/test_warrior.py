@@ -3,7 +3,7 @@ from typing import cast
 import pytest
 
 from the_shattered_kingdom.characters.character import Character
-from the_shattered_kingdom.characters.warrior import Warrior
+from the_shattered_kingdom.characters.players.warrior import Warrior
 
 
 class DummyCharacter(Character):

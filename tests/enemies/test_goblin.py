@@ -4,8 +4,8 @@ from unittest.mock import patch
 import pytest
 
 from the_shattered_kingdom.characters.character import Character
-from the_shattered_kingdom.enemies.enemy import Enemy
-from the_shattered_kingdom.enemies.goblin import Goblin
+from the_shattered_kingdom.characters.enemies.enemy import Enemy
+from the_shattered_kingdom.characters.enemies.goblin import Goblin
 
 
 class DummyCharacter(Character):

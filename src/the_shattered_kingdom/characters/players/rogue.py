@@ -1,6 +1,7 @@
-from .character import Character
+from the_shattered_kingdom.characters.character import Character
+from the_shattered_kingdom.characters.players.player import Player
 
-class Rogue(Character):
+class Rogue(Player):
     """Represent an agile fighter capable of striking twice in succession."""
 
     def __init__(self, name: str) -> None:

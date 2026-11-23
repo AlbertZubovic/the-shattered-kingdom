@@ -3,7 +3,7 @@ import inspect
 import pytest
 
 from the_shattered_kingdom.characters.character import Character
-from the_shattered_kingdom.enemies.enemy import Enemy
+from the_shattered_kingdom.characters.enemies.enemy import Enemy
 
 
 class DummyEnemy(Enemy):

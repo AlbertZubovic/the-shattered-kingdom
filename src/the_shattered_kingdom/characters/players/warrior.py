@@ -1,6 +1,7 @@
-from .character import Character
+from the_shattered_kingdom.characters.character import Character
+from the_shattered_kingdom.characters.players.player import Player
 
-class Warrior(Character):
+class Warrior(Player):
     """Represent a durable melee fighter with a powerful heavy strike."""
 
     def __init__(self, name: str) -> None:

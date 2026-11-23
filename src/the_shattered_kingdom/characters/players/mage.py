@@ -1,6 +1,7 @@
-from .character import Character
+from the_shattered_kingdom.characters.character import Character
+from the_shattered_kingdom.characters.players.player import Player
 
-class Mage(Character):
+class Mage(Player):
     """Represent a spellcaster who specializes in powerful magical attacks."""
 
     def __init__(self, name: str) -> None:
